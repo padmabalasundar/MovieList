@@ -7,38 +7,23 @@
  */
 
 import React from 'react';
-import type {Node} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack'
+import {NavigationContainer} from '@react-navigation/native'
+import HomeScreen from './src/screens/HomeScreen'
+import DetailsScreen from './src/screens/DetailsScreen'
+const Stack = createStackNavigator();
 
-import {
-  Colors
-} from 'react-native/Libraries/NewAppScreen';
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+export default function App() {
+  
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-     
-        <View>
-          <Text>Movie List App</Text>
-        </View>
-    
-    </SafeAreaView>
+   
+       <NavigationContainer>
+         <Stack.Navigator headerMode ='none' >
+           <Stack.Screen name="Home" component={HomeScreen} />
+           <Stack.Screen name="Details" component={DetailsScreen} />
+         </Stack.Navigator>
+       </NavigationContainer>
+  
   );
 };
 
-export default App;
