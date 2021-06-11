@@ -2,27 +2,29 @@ import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 
 const ProfileThumb = ({ item }) => {
+  console.log("ProfileThumb.js item",item)
   return (
     <View style={styles.profileThumb}>
       <>
+      {
+        item.profile_path &&
         <Image
           source={{
             uri: `http://image.tmdb.org/t/p/w342${item?.profile_path}`,
           }}
           style={styles.crewImages}
         />
+      }
+        
       </>
-      <View
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'black',
-          paddingVertical: 5,
-        }}>
-        <Text style={styles.title}>{item.name}</Text>
-      </View>
+      {
+        item.name &&
+        <View
+          style={styles.crewName}>
+          <Text style={styles.title}>{item.name}</Text>
+        </View>
+      }
+      
     </View>
   );
 };
@@ -52,4 +54,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  crewName: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'black',
+    paddingVertical: 5,
+  }
 });

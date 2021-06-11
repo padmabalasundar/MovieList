@@ -7,11 +7,12 @@ import {
     TextInput,
     Dimensions,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
+    ImageBackground
 } from 'react-native';
 import { Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen'
 import LoadingScreen from '../components/LoadingScreen'
 import { fetchMovies } from "../api_handlers/api_handler";
 
@@ -33,8 +34,13 @@ const HomeScreen = ({ navigation }) => {
             setMovies(data);
             setLoading(false);
         });
-    }, [searchNow]);
 
+        return () => {
+            // Code to clean up the cache can be entered 
+            console.log("Clean up function") 
+        }
+    }, [searchNow]);
+    console.log("movies", movies)
     return loading ? (
         <LoadingScreen />
     ) : (
@@ -57,8 +63,16 @@ const HomeScreen = ({ navigation }) => {
                 </View>
             </View>
 
-            {/* ---------------- Search Box--------------  */}
+            {/* ---------------- Hello world Link and  Search Box--------------  */}
             <View>
+                <View style={styles.link}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.navigate('Hello')
+                        }}>
+                        <Text style={styles.linkText}>Click to navigate to Hello World screen </Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.inputCard}>
                     <TextInput
                         style={styles.input}
@@ -71,13 +85,14 @@ const HomeScreen = ({ navigation }) => {
                             setSearchNow(!searchNow);
                         }}>
                         <Icon
-                            name={searchTerm ? 'magnify' : 'refresh'}
+                            name={'magnify'}
                             size={20}
                             color="black"
                             style={{ alignSelf: 'center', marginHorizontal: 20 }}
                         />
                     </TouchableOpacity>
                 </View>
+                
             </View>
 
             {/* ------------------- Movie List--------------------- */}
@@ -86,26 +101,39 @@ const HomeScreen = ({ navigation }) => {
                 <FlatList
                     data={movies}
                     numColumns={2}
-                    keyExtractor={(item,index) => index}
-                    renderItem={({ item,index}) => {
+                    keyExtractor={(item, index) => index}
+                    renderItem={({ item, index }) => {
                         return (
                             <Card style={styles.movieCard}>
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        navigation.navigate('Details', { movie: item })
-                                    }>
+                                <View>
                                     <Image
                                         source={{
                                             uri: `http://image.tmdb.org/t/p/w780${item.poster_path}`,
                                         }}
-                                        style={{ width: wp('48%'), height: wp('48%')}}
+                                        style={styles.movieItemBackground}
                                     />
-                                </TouchableOpacity>
+                                </View>
+                                <View style={{ position: "absolute", left: 0, right: 0, top: 0, bottom: 0 }}>
+                                    <TouchableOpacity
+
+                                        onPress={() =>
+                                            navigation.navigate('Details', { movie: item })
+                                        }>
+
+                                        <Image
+                                            source={{
+                                                uri: `http://image.tmdb.org/t/p/w780${item.poster_path}`,
+                                            }}
+                                            style={styles.movieItem}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
                             </Card>
                         );
                     }}
                 />
             </View>
+
         </View>
     );
 };
@@ -139,7 +167,7 @@ const styles = StyleSheet.create({
     },
     inputCard: {
         position: 'absolute',
-        top:-hp('2%'),
+        top: hp('0.4%'),
         margin: 20,
         left: 10,
         right: 10,
@@ -155,11 +183,29 @@ const styles = StyleSheet.create({
     },
     movieCard: {
         height: wp('50%'),
-       overflow: 'hidden',
+        overflow: 'hidden',
         borderWidth: 5,
         borderRadius: 5,
     },
     movieListCard: {
         top: hp('8%'),
     },
+    movieItemBackground: {
+        width: wp('48%'),
+        height: wp('48%'),
+        backgroundColor: "black",
+        opacity: 0.43,
+    },
+    movieItem: {
+        //   width: wp('48%'), 
+        height: wp('48%'),
+        resizeMode: "contain"
+    },
+    link:{
+        top :hp('0.51%'),
+        alignSelf: "center"
+    },
+    linkText:{
+        color: "#FFFFFF"
+    }
 });

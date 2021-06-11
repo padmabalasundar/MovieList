@@ -6,16 +6,26 @@ import {API_KEY,BASE_URL} from '../config/constants'
 //API call to search for a movie based on the input text
 export const fetchMovies = async (search, movies) => {
     console.log('api_handler.js fetching movies with search item:', search);
-    
-    if (!search) { // Search text not available - Default search  - trending list for the day
-        const response = await axios.get(`${BASE_URL}trending/all/day?api_key=${API_KEY}`);
-      return [...movies, ...response.data.results];
-    } else { //Search text available
-      const response = await axios.get(
-        `${BASE_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${search}`
-      );
-      return [...response.data.results];
+    try{
+      if (!search) { // Search text not available - Default search  - trending list for the day
+
+        //---------- other options -----------
+        // ------------ movie/now_playing -------------
+        // ------------ trending/all/week --------------
+
+        const response = await axios.get(`${BASE_URL}trending/all/week?api_key=${API_KEY}`);
+        return [...response.data.results];
+      } else { //Search text available
+        const response = await axios.get(
+          `${BASE_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${search}`
+        );
+        return [...response.data.results];
+      }
+    }catch(error){
+      console.log("api_handler.js Error while fetching movie details",error)
+      return  [] ; // return empty array
     }
+    
 };
   
 //API call to fetch the Crew details of the selected movie
@@ -43,6 +53,8 @@ export const fetchCredits =async (id) => {
   
 //API call to fetch the Budget and Genre details of the selected movie
 export const fetchDetails =async (id) => {
+
+  try{
     const response = await axios.get(`${BASE_URL}movie/${id}?api_key=${API_KEY}`)
       console.log("api_handler.js fetching details  response :",response.data);
   
@@ -53,6 +65,12 @@ export const fetchDetails =async (id) => {
       })
      
       return { genre: genre, budget: response.data.budget };
+    
+  }
+  catch(error){
+    console.log("api_handler.js Error while fetching genre details",error)
+    return {genre: [], budget: null };
+  }
     
 };
   

@@ -32,6 +32,10 @@ export default function DetailsScreen({ navigation, route }) {
             setDirector(data.director);
             setLoading(false);
         });
+        return () => {
+            // Code to clean up the cache can be entered 
+            console.log("Clean up function") 
+        }
     }, []);
 
     return loading ? (
@@ -66,7 +70,7 @@ export default function DetailsScreen({ navigation, route }) {
                                 <FlatList
                                     data={credits.cast}
                                     keyExtractor={(item,index) => index}
-                                    renderItem={({ item }) => <ProfileThumb item={item} />}
+                                    renderItem={({ item }) => <ProfileThumb item={item} /> }
                                     horizontal
                                 />
 
